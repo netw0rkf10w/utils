@@ -13,6 +13,7 @@ then
     VERSION=$1
     PREFIX=$2
 elif [ $# -gt 0 ]
+then
     VERSION=$1
 else
     echo "No arguments provided. Default values will be used."
