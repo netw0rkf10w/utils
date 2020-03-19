@@ -32,7 +32,8 @@ cd ${DIR}
 ./config --prefix=${HOME}/.local/openssl --openssldir=${HOME}/.local/openssl
 make -j$(nproc)
 # make test
-make install
+# install_sw instead of install to not install the manual
+make install_sw
 cd ..
 
 # cleanup
@@ -41,3 +42,5 @@ cd ..
 echo "Done. Make sure to add this to your ~/.bashrc:"
 echo "export PATH=$""HOME/.local/openssl/bin:$""PATH"
 echo "export LD_LIBRARY_PATH=$""HOME/.local/openssl/lib:$""LD_LIBRARY_PATH"
+echo "IMPORTANT: To let the new installation use existing CA-certificates, create a symbolic link to these certificates, e.g.:"
+echo "ln -s /etc/ssl/certs $""HOME/.local/openssl/certs"
