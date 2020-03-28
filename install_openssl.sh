@@ -4,8 +4,24 @@
 # exit on error
 set -e
 
+VERSION=1.1.1d
+PREFIX=${HOME}/.local
+# Check number of arguments
+if [ $# -gt 1 ]
+then
+    VERSION=$1
+    PREFIX=$2
+elif [ $# -gt 0 ]
+then
+    VERSION=$1
+else
+    echo "No arguments provided. Default values will be used."
+fi
+
+echo "Will install version ${VERSION} to ${PREFIX}"
+
 # installation directory
-mkdir -p $HOME/.local
+mkdir -p ${PREFIX}
 
 # temporary directory
 TMP=${HOME}/tmp_openssl_4zf89YDf
@@ -13,7 +29,6 @@ mkdir -p ${TMP}
 cd ${TMP}
 
 # download source files
-VERSION=1.1.1e
 FILENAME=openssl-${VERSION}.tar.gz
 if [ -f "${FILENAME}" ]; then
     echo "${FILENAME} exists. Skip downloading."
@@ -29,7 +44,7 @@ DIR=$(tar -tf ${FILENAME} | head -1 | cut -f1 -d"/")
 tar -xzvf ${FILENAME}
 echo "Enter ${DIR} and install"
 cd ${DIR}
-./config --prefix=${HOME}/.local/openssl --openssldir=${HOME}/.local/openssl
+./config --prefix=${PREFIX} --openssldir=${PREFIX}/openssl
 make -j$(nproc)
 # make test
 # install_sw instead of install to not install the manual

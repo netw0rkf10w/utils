@@ -1,11 +1,11 @@
 #!/bin/bash
 # Script for installing wget without root permission
-# dependencies: gnutls, 
+# dependencies: gmp 
 
 # exit on error
 set -e
 
-VERSION=latest
+VERSION=3.5.1
 PREFIX=${HOME}/.local
 # Check number of arguments
 if [ $# -gt 1 ]
@@ -25,16 +25,16 @@ echo "Will install version ${VERSION} to ${PREFIX}"
 mkdir -p ${PREFIX}
 
 # temporary directory
-TMP=${HOME}/tmp_zlip_${VERSION}_4zf89YDf
+TMP=${HOME}/tmp_nettle_${VERSION}_4zf89YDf
 mkdir -p ${TMP}
 cd ${TMP}
 
 # download source files
-FILENAME=wget-${VERSION}.tar.gz
+FILENAME=nettle-${VERSION}.tar.gz
 if [ -f "${FILENAME}" ]; then
     echo "${FILENAME} exists. Skip downloading."
 else
-    wget https://ftp.gnu.org/gnu/wget/${FILENAME}
+    wget https://ftp.gnu.org/gnu/nettle/${FILENAME}
 fi
 
 # extract files, configure, and compile
@@ -45,16 +45,18 @@ DIR=$(tar -tf ${FILENAME} | head -1 | cut -f1 -d"/")
 tar -xzvf ${FILENAME}
 echo "Enter ${DIR} and install"
 cd ${DIR}
-./configure --prefix=${PREFIX}
+LDFLAGS=`pkg-config --libs-only-L gmp` ./configure --prefix=${PREFIX}
 make -j$(nproc)
 make install
 cd ..
 
 # cleanup
-# rm -rf ${TMP}
+rm -rf ${TMP}
 
 echo "Done. Make sure to add this to your ~/.bashrc:"
 echo "export PATH=${PREFIX}/bin:$""PATH"
-echo "export LD_LIBRARY_PATH=${PREFIX}/lib:$""LD_LIBRARY_PATH"
+echo "export LD_LIBRARY_PATH=${PREFIX}/lib:${PREFIX}/lib64:$""LD_LIBRARY_PATH"
+# export PKG_CONFIG_PATH=$HOME/.local/lib/pkgconfig:$HOME/.local/lib64/pkgconfig:$PKG_CONFIG_PATH
+echo "export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig:${PREFIX}/lib64/pkgconfig:$""PKG_CONFIG_PATH"
 # export CPATH=$HOME/.local/include:$CPATH
 echo "export CPATH=${PREFIX}/include:$""CPATH"

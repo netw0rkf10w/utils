@@ -1,11 +1,10 @@
 #!/bin/bash
-# Script for installing wget without root permission
-# dependencies: gnutls, 
+# Script for installing unbound without root permission
 
 # exit on error
 set -e
 
-VERSION=latest
+VERSION=1.10.0
 PREFIX=${HOME}/.local
 # Check number of arguments
 if [ $# -gt 1 ]
@@ -25,16 +24,16 @@ echo "Will install version ${VERSION} to ${PREFIX}"
 mkdir -p ${PREFIX}
 
 # temporary directory
-TMP=${HOME}/tmp_zlip_${VERSION}_4zf89YDf
+TMP=${HOME}/tmp_unbound_${VERSION}_4zf89YDf
 mkdir -p ${TMP}
 cd ${TMP}
 
 # download source files
-FILENAME=wget-${VERSION}.tar.gz
+FILENAME=release-${VERSION}.tar.gz
 if [ -f "${FILENAME}" ]; then
     echo "${FILENAME} exists. Skip downloading."
 else
-    wget https://ftp.gnu.org/gnu/wget/${FILENAME}
+    wget https://github.com/NLnetLabs/unbound/archive/${FILENAME}
 fi
 
 # extract files, configure, and compile

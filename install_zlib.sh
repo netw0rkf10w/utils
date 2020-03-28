@@ -1,6 +1,5 @@
 #!/bin/bash
-# Script for installing wget without root permission
-# Requirements: openssl and libffi installed in ~/.local/
+# Script for installing zlib without root permission
 
 # exit on error
 set -e

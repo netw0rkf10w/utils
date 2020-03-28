@@ -1,11 +1,10 @@
 #!/bin/bash
-# Script for installing wget without root permission
-# dependencies: gnutls, 
+# Script for installing gmp without root permission
 
 # exit on error
 set -e
 
-VERSION=latest
+VERSION=6.2.0
 PREFIX=${HOME}/.local
 # Check number of arguments
 if [ $# -gt 1 ]
@@ -25,16 +24,16 @@ echo "Will install version ${VERSION} to ${PREFIX}"
 mkdir -p ${PREFIX}
 
 # temporary directory
-TMP=${HOME}/tmp_zlip_${VERSION}_4zf89YDf
+TMP=${HOME}/tmp_gmp_${VERSION}_4zf89YDf
 mkdir -p ${TMP}
 cd ${TMP}
 
 # download source files
-FILENAME=wget-${VERSION}.tar.gz
+FILENAME=gmp-${VERSION}.tar.gz
 if [ -f "${FILENAME}" ]; then
     echo "${FILENAME} exists. Skip downloading."
 else
-    wget https://ftp.gnu.org/gnu/wget/${FILENAME}
+    wget https://gmplib.org/download/gmp/${FILENAME}
 fi
 
 # extract files, configure, and compile
@@ -55,6 +54,8 @@ cd ..
 
 echo "Done. Make sure to add this to your ~/.bashrc:"
 echo "export PATH=${PREFIX}/bin:$""PATH"
-echo "export LD_LIBRARY_PATH=${PREFIX}/lib:$""LD_LIBRARY_PATH"
+echo "export LD_LIBRARY_PATH=${PREFIX}/lib:${PREFIX}/lib64:$""LD_LIBRARY_PATH"
+# export PKG_CONFIG_PATH=$HOME/.local/lib/pkgconfig:$HOME/.local/lib64/pkgconfig:$PKG_CONFIG_PATH
+echo "export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig:${PREFIX}/lib64/pkgconfig:$""PKG_CONFIG_PATH"
 # export CPATH=$HOME/.local/include:$CPATH
 echo "export CPATH=${PREFIX}/include:$""CPATH"

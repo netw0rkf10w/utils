@@ -1,11 +1,11 @@
 #!/bin/bash
-# Script for installing wget without root permission
-# dependencies: gnutls, 
+# Script for installing gnutls without root permission
+# Dependencies: nettle
 
 # exit on error
 set -e
 
-VERSION=latest
+VERSION=3.6.12
 PREFIX=${HOME}/.local
 # Check number of arguments
 if [ $# -gt 1 ]
@@ -25,16 +25,16 @@ echo "Will install version ${VERSION} to ${PREFIX}"
 mkdir -p ${PREFIX}
 
 # temporary directory
-TMP=${HOME}/tmp_zlip_${VERSION}_4zf89YDf
+TMP=${HOME}/tmp_gnutls_${VERSION}_4zf89YDf
 mkdir -p ${TMP}
 cd ${TMP}
 
 # download source files
-FILENAME=wget-${VERSION}.tar.gz
+FILENAME=gnutls-${VERSION}.tar.xz
 if [ -f "${FILENAME}" ]; then
     echo "${FILENAME} exists. Skip downloading."
 else
-    wget https://ftp.gnu.org/gnu/wget/${FILENAME}
+    wget https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/${FILENAME}
 fi
 
 # extract files, configure, and compile
@@ -42,16 +42,16 @@ fi
 # To install openssl: https://stackoverflow.com/a/49578644/2131200
 echo "Extracting ${FILENAME}"
 DIR=$(tar -tf ${FILENAME} | head -1 | cut -f1 -d"/")
-tar -xzvf ${FILENAME}
+tar -xf ${FILENAME}
 echo "Enter ${DIR} and install"
 cd ${DIR}
-./configure --prefix=${PREFIX}
+LDFLAGS=`pkg-config --libs-only-L gmp` ./configure --prefix=${PREFIX} --with-included-libtasn1 --with-included-unistring --without-p11-kit
 make -j$(nproc)
 make install
 cd ..
 
 # cleanup
-# rm -rf ${TMP}
+rm -rf ${TMP}
 
 echo "Done. Make sure to add this to your ~/.bashrc:"
 echo "export PATH=${PREFIX}/bin:$""PATH"
