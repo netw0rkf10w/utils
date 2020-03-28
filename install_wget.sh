@@ -5,7 +5,7 @@
 # exit on error
 set -e
 
-VERSION=1.2.11
+VERSION=latest
 PREFIX=${HOME}/.local
 # Check number of arguments
 if [ $# -gt 1 ]
@@ -30,11 +30,11 @@ mkdir -p ${TMP}
 cd ${TMP}
 
 # download source files
-FILENAME=zlib-${VERSION}.tar.gz
+FILENAME=wget-${VERSION}.tar.gz
 if [ -f "${FILENAME}" ]; then
     echo "${FILENAME} exists. Skip downloading."
 else
-    wget https://www.zlib.net/${FILENAME}
+    wget https://ftp.gnu.org/gnu/wget/${FILENAME}
 fi
 
 # extract files, configure, and compile
