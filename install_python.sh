@@ -24,6 +24,9 @@ echo "Will install version ${VERSION} to ${PREFIX}"
 # First install openssl
 bash install_openssl.sh 1.1.1g ${PREFIX}
 
+# The install libffi
+bash install_libffi.sh
+
 # installation directory
 mkdir -p ${PREFIX}
 
