@@ -4,7 +4,7 @@
 # exit on error
 set -e
 
-VERSION=1.1.1d
+VERSION=1.1.1g
 PREFIX=${HOME}/.local
 # Check number of arguments
 if [ $# -gt 1 ]
