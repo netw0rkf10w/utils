@@ -25,7 +25,7 @@ echo "Will install version ${VERSION} to ${PREFIX}"
 bash install_openssl.sh 1.1.1g ${PREFIX}
 
 # The install libffi
-bash install_libffi.sh
+bash install_libffi.sh 3.3 ${PREFIX}
 
 # installation directory
 mkdir -p ${PREFIX}
@@ -51,7 +51,7 @@ DIR=$(tar -tf ${FILENAME} | head -1 | cut -f1 -d"/")
 tar -xzvf ${FILENAME}
 echo "Enter ${DIR} and install"
 cd ${DIR}
-LDFLAGS=`pkg-config --libs-only-L libffi` ./configure --enable-shared --enable-optimizations --with-openssl=${HOME}/.local/openssl --prefix=${PREFIX}
+LDFLAGS=`pkg-config --libs-only-L libffi` ./configure --enable-shared --enable-optimizations --with-openssl=${PREFIX}/ssl --prefix=${PREFIX}
 make -j$(nproc)
 make altinstall
 cd ..
