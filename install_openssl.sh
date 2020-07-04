@@ -44,7 +44,7 @@ DIR=$(tar -tf ${FILENAME} | head -1 | cut -f1 -d"/")
 tar -xzvf ${FILENAME}
 echo "Enter ${DIR} and install"
 cd ${DIR}
-./config --prefix=${PREFIX}/ssl --openssldir=${PREFIX}/ssl
+./config --prefix=${PREFIX}/openssl --openssldir=${PREFIX}/openssl
 make -j$(nproc)
 # make test
 # install_sw instead of install to not install the manual
@@ -55,7 +55,11 @@ cd ..
 # rm -rf ${TMP}
 
 echo "Done. Make sure to add this to your ~/.bashrc:"
-echo "export PATH=$""HOME/.local/ssl/bin:$""PATH"
-echo "export LD_LIBRARY_PATH=$""HOME/.local/ssl/lib:$""LD_LIBRARY_PATH"
+echo "export PATH=$""HOME/.local/openssl/bin:$""PATH"
+echo "export LD_LIBRARY_PATH=$""HOME/.local/openssl/lib:$""LD_LIBRARY_PATH"
 echo "IMPORTANT: To let the new installation use existing CA-certificates, create a symbolic link to these certificates, e.g.:"
-echo "ln -s /etc/ssl/certs" "${PREFIX}/ssl/certs"
+echo "ln -s /etc/ssl/certs" "${PREFIX}/openssl/certs"
+echo "You can test openssl by running:"
+echo "openssl req -x509 -newkey rsa:2048 -keyout delete_me.pem -out delete_me_cert.pem -days 3653"
+echo "rm delete_me.pem"
+echo "rm delete_me_cert.pem"
