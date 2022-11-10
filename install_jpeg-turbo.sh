@@ -1,11 +1,10 @@
 #!/bin/bash
-# Script for installing Python without root permission
-# Requirements: openssl and libffi installed in ~/.local/
+# Script for installing libffi without root permission
 
 # exit on error
 set -e
 
-VERSION=3.7.8
+VERSION=2.1.4
 PREFIX=${HOME}/.local
 # Check number of arguments
 if [ $# -gt 1 ]
@@ -19,28 +18,22 @@ else
     echo "No arguments provided. Default values will be used."
 fi
 
-echo "Will install version ${VERSION} to ${PREFIX}"
-
-# First install openssl
-bash install_openssl.sh 1.1.1g ${PREFIX}
-
-# The install libffi
-bash install_libffi.sh 3.3 ${PREFIX}
+echo "Will install jpeg-turbo version ${VERSION} to ${PREFIX}"
 
 # installation directory
 mkdir -p ${PREFIX}
 
 # temporary directory
-TMP=${HOME}/tmp_python_${VERSION}_4zf89YDf
+TMP=/tmp/tmp_jpeg-turbo_4zf89YDf
 mkdir -p ${TMP}
 cd ${TMP}
 
 # download source files
-FILENAME=Python-${VERSION}.tgz
+FILENAME=${VERSION}.tar.gz
 if [ -f "${FILENAME}" ]; then
     echo "${FILENAME} exists. Skip downloading."
 else
-    wget https://www.python.org/ftp/python/${VERSION}/${FILENAME}
+    wget https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/${FILENAME}
 fi
 
 # extract files, configure, and compile
@@ -51,14 +44,17 @@ DIR=$(tar -tf ${FILENAME} | head -1 | cut -f1 -d"/")
 tar -xzvf ${FILENAME}
 echo "Enter ${DIR} and install"
 cd ${DIR}
-LDFLAGS=`pkg-config --libs-only-L libffi` ./configure --enable-shared --enable-optimizations --with-openssl=${PREFIX}/openssl --prefix=${PREFIX}
+mkdir build
+cd build
+cmake -G"Unix Makefiles" .. -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=${PREFIX}
 make -j$(nproc)
-make altinstall
+# make DESTDIR=${PREFIX} install
+make install
 cd ..
 
 # cleanup
 # rm -rf ${TMP}
 
 echo "Done. Make sure to add this to your ~/.bashrc:"
-echo "export PATH=${PREFIX}/bin:$""PATH"
-echo "export LD_LIBRARY_PATH=${PREFIX}/lib:$""LD_LIBRARY_PATH"
+echo "export PKG_CONFIG_PATH=$""HOME/.local/lib/pkgconfig:$""PKG_CONFIG_PATH"
+echo "export LD_LIBRARY_PATH=$""HOME/.local/lib:$""LD_LIBRARY_PATH"
