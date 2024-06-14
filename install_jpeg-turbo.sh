@@ -44,7 +44,7 @@ DIR=$(tar -tf ${FILENAME} | head -1 | cut -f1 -d"/")
 tar -xzvf ${FILENAME}
 echo "Enter ${DIR} and install"
 cd ${DIR}
-mkdir build
+mkdir -p build
 cd build
 cmake -G"Unix Makefiles" .. -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=${PREFIX}
 make -j$(nproc)
@@ -53,7 +53,7 @@ make install
 cd ..
 
 # cleanup
-# rm -rf ${TMP}
+rm -rf ${TMP}
 
 echo "Done. Make sure to add this to your ~/.bashrc:"
 echo "export PKG_CONFIG_PATH=$""HOME/.local/lib/pkgconfig:$""PKG_CONFIG_PATH"
